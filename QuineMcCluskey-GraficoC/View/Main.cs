@@ -21,16 +21,15 @@ namespace QuineMcCluskey_GraficoC.View
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 caminhoArquivo = openFileDialog.FileName;
-                var readerArquivo = new StreamReader(caminhoArquivo);
+                using var readerArquivo = new StreamReader(caminhoArquivo);
                 txtSOP.Text = readerArquivo.ReadToEnd();
-                readerArquivo.Close();
             }
         }
 
         private void btnExecutar_Click(object sender, EventArgs e)
         {
             // Carrega todos os Mintermos e Don't Cares do arquivo TXT
-            List<Mintermo> ColunaMintermos = ViewMain.CarregarMintermosSoap(caminhoArquivo);
+            List<Mintermo> ColunaMintermos = ViewMain.CarregarMintermosSoap(txtSOP.Text);
 
             // Executa o Método responsável pelo Quine McCluskey
             QuineMcCluskey Quine = new QuineMcCluskey(ViewMain.numeroVariaveis);

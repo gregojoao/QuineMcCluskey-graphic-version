@@ -249,63 +249,25 @@ namespace QuineMcCluskey_GraficoC.Model
 
             }
 
-            bool terminouDontCares = false;
-            bool terminouFor = false;
-
-            var contador = 0;
-
-            while (terminouDontCares == false)
+            foreach (var expressao in ExpressoesNaoSimplificadas)
             {
-                contador = 0;
-
-                foreach (var expressao in ExpressoesNaoSimplificadas)
-                {
-                    foreach (var mintermo in expressao.Mintermos)
-                    {
-                        terminouFor = false;
-                        foreach (var dontCare in DontCares)
-                        {
-                            if (mintermo == dontCare)
-                            {
-                                expressao.Mintermos.Remove(mintermo);
-                                terminouFor = true;
-                                contador += 1;
-                                break;
-                            }
-                        }
-
-                        if (terminouFor)
-                            break;
-                    }
-                }
-
-                if (contador == 0)
-                    terminouDontCares = true;
+                expressao.Mintermos.RemoveAll(mintermo => DontCares.Contains(mintermo));
             }
 
             List<Coluna> Conjuntos = new List<Coluna>();
-            bool ehMaior = true;
 
             while (ExpressoesNaoSimplificadas.Count > 0)
             {
-                foreach (var expressao in ExpressoesNaoSimplificadas)
+                int indiceMaior = 0;
+
+                for (int i = 1; i < ExpressoesNaoSimplificadas.Count; i++)
                 {
-                    ehMaior = true;
-
-                    foreach (var expressaoAux in ExpressoesNaoSimplificadas)
-                    {
-                        if (expressao.Mintermos.Count < expressaoAux.Mintermos.Count)
-                            ehMaior = false;
-
-                    }
-
-                    if (ehMaior == true)
-                    {
-                        Conjuntos.Add(expressao);
-                        ExpressoesNaoSimplificadas.Remove(expressao);
-                        break;
-                    }
+                    if (ExpressoesNaoSimplificadas[i].Mintermos.Count > ExpressoesNaoSimplificadas[indiceMaior].Mintermos.Count)
+                        indiceMaior = i;
                 }
+
+                Conjuntos.Add(ExpressoesNaoSimplificadas[indiceMaior]);
+                ExpressoesNaoSimplificadas.RemoveAt(indiceMaior);
             }
 
             ExpressoesNaoSimplificadas = Conjuntos;
@@ -558,38 +520,18 @@ namespace QuineMcCluskey_GraficoC.Model
 
         private static List<List<List<Coluna>>> DeletaColunasVazias(List<List<List<Coluna>>> MatrizColunasComparacao)
         {
-            Boolean temZerado = true;
-
-            while (temZerado)
+            for (int i = MatrizColunasComparacao.Count - 1; i >= 0; i--)
             {
-                temZerado = false;
-
-                for (int i = 0; i < MatrizColunasComparacao.Count; i++) // For mais externo, de acordo com o número de colunas..
+                for (int j = MatrizColunasComparacao[i].Count - 1; j >= 0; j--)
                 {
-                    for (int j = 0; j < MatrizColunasComparacao[i].Count; j++)
-                    {
-                        for (int k = 0; k < MatrizColunasComparacao[i][j].Count; k++)
-                        {
-                            if (MatrizColunasComparacao[i][j][k].Mintermos.Count == 0)
-                            {
-                                temZerado = true;
-                                MatrizColunasComparacao[i][j].Remove(MatrizColunasComparacao[i][j][k]);
-                            }
-                        }
+                    MatrizColunasComparacao[i][j].RemoveAll(coluna => coluna.Mintermos.Count == 0);
 
-                        if (MatrizColunasComparacao[i][j].Count == 0)
-                        {
-                            temZerado = true;
-                            MatrizColunasComparacao[i].Remove(MatrizColunasComparacao[i][j]);
-                        }
-                    }
-
-                    if (MatrizColunasComparacao[i].Count == 0)
-                    {
-                        temZerado = true;
-                        MatrizColunasComparacao.Remove(MatrizColunasComparacao[i]);
-                    }
+                    if (MatrizColunasComparacao[i][j].Count == 0)
+                        MatrizColunasComparacao[i].RemoveAt(j);
                 }
+
+                if (MatrizColunasComparacao[i].Count == 0)
+                    MatrizColunasComparacao.RemoveAt(i);
             }
 
             return MatrizColunasComparacao;

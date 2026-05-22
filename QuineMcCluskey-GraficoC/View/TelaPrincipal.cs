@@ -21,9 +21,8 @@ namespace QuineMcCluskey_GraficoC.View
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 caminhoArquivo = openFileDialog.FileName;
-                var readerArquivo = new StreamReader(caminhoArquivo);
+                using var readerArquivo = new StreamReader(caminhoArquivo);
                 txtSOP.Text = readerArquivo.ReadToEnd();
-                readerArquivo.Close();
             }
         }
 

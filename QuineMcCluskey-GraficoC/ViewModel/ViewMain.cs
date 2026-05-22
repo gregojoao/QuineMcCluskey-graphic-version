@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace QuineMcCluskey_GraficoC.ViewModel
@@ -18,33 +18,29 @@ namespace QuineMcCluskey_GraficoC.ViewModel
 
         private static int PegarNumeroMintermos(string soap)
         {
-            string conteudo = soap;
-            string ultimoMintermoAux = "";
-            string numeroMintermo = "";
-            int ultimoMintermo = 0;
+            List<int> dontCares = new List<int>();
+            List<int> posicoes = new List<int>();
 
-            foreach (char caracter in conteudo)
+            SepararTermos(soap, posicoes, dontCares);
+
+            int ultimoMintermo = -1;
+
+            foreach (int posicao in posicoes)
             {
-                if (caracter == ';')
-                {
-                    ultimoMintermoAux = numeroMintermo;
-                    numeroMintermo = "";
-                }
-                else if (caracter != ';' && caracter != '-')
-                    numeroMintermo += caracter.ToString();
+                if (posicao > ultimoMintermo)
+                    ultimoMintermo = posicao;
             }
 
-            var numeroMintermos = 0;
-            ultimoMintermo = Convert.ToInt32(ultimoMintermoAux);
-
-            for (int i = 1; i < 1000000000; i++)
+            foreach (int dontCare in dontCares)
             {
-                if (ultimoMintermo >= Math.Pow(2, i) && ultimoMintermo < Math.Pow(2, i + 1))
-                {
-                    numeroMintermos = Convert.ToInt32(Math.Pow(2, i + 1));
-                    break;
-                }
+                if (dontCare > ultimoMintermo)
+                    ultimoMintermo = dontCare;
             }
+
+            int numeroMintermos = 1;
+
+            while (numeroMintermos <= ultimoMintermo)
+                numeroMintermos *= 2;
 
             return numeroMintermos;
         }
@@ -60,36 +56,34 @@ namespace QuineMcCluskey_GraficoC.ViewModel
 
         public static List<Mintermo> CarregarMintermos(string soap)
         {
-            List<Mintermo> Mintermos = new List<Mintermo>();
-            List<int> DontCares = new List<int>();
-            List<int> Posicoes = new List<int>();
-            
-            Boolean ehDontCare = false;
+            List<int> dontCares = new List<int>();
+            List<int> posicoes = new List<int>();
 
-            string conteudo = soap;
-            string posicaoMintermo = "";
+            SepararTermos(soap, posicoes, dontCares);
 
-            foreach (char caracter in conteudo)
+            return PopularMintermos(soap, posicoes, dontCares);
+        }
+
+        private static void SepararTermos(string conteudo, List<int> posicoes, List<int> dontCares)
+        {
+            foreach (string termoOriginal in conteudo.Split(new[] { ';', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (caracter == ';')
-                {
-                    if (ehDontCare)
-                        DontCares.Add(Convert.ToInt32(posicaoMintermo));
-                    else
-                        Posicoes.Add(Convert.ToInt32(posicaoMintermo));
+                string termo = termoOriginal.Trim();
 
-                    posicaoMintermo = "";
-                    ehDontCare = false;
-                }
-                else if (caracter == '-')
-                    ehDontCare = true;
-                else if (caracter != ' ')
-                    posicaoMintermo += caracter.ToString();
+                if (termo.Length == 0)
+                    continue;
+
+                bool ehDontCare = termo.StartsWith("-");
+                string numero = ehDontCare ? termo.Substring(1).Trim() : termo;
+
+                if (!int.TryParse(numero, out int posicao))
+                    throw new FormatException("Termo inválido no mapa de Karnaugh: " + termo);
+
+                if (ehDontCare)
+                    dontCares.Add(posicao);
+                else
+                    posicoes.Add(posicao);
             }
-
-            Mintermos = PopularMintermos(soap, Posicoes, DontCares);
-
-            return Mintermos;
         }
 
         private static List<Mintermo> PopularMintermos(string soap, List<int> Mintermos, List<int> DontCares)
