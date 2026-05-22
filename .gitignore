@@ -1,6 +1,10 @@
 
 \.vs/
 
+**/bin/
+
+**/obj/
+
 QuineMcCluskey-GraficoC/bin/Debug/QuineMcCluskey-GraficoC\.exe
 
 QuineMcCluskey-GraficoC/bin/Debug/QuineMcCluskey-GraficoC\.exe\.config

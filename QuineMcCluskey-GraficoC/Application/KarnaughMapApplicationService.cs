@@ -4,7 +4,7 @@ using QuineMcCluskey_GraficoC.Domain;
 
 namespace QuineMcCluskey_GraficoC.Application
 {
-    class KarnaughMapApplicationService
+    public class KarnaughMapApplicationService
     {
         public static int numeroVariaveis = 0;
 

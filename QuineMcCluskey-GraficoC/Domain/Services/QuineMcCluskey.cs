@@ -4,7 +4,7 @@ using QuineMcCluskey_GraficoC.Domain;
 
 namespace QuineMcCluskey_GraficoC.Domain.Services
 {
-    class QuineMcCluskey
+    public class QuineMcCluskey
     {
         private static int numVariaveis;
         
