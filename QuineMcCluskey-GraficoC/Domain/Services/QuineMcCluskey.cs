@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using QuineMcCluskey_GraficoC.Domain;
 
-namespace QuineMcCluskey_GraficoC.Model
+namespace QuineMcCluskey_GraficoC.Domain.Services
 {
     class QuineMcCluskey
     {
@@ -15,7 +15,7 @@ namespace QuineMcCluskey_GraficoC.Model
             numVariaveis = numeroVariaveis;
         }
 
-        public void Executa(List<Mintermo> ColunaMintermos, TextBox txtLog)
+        public string Executa(List<Mintermo> ColunaMintermos)
         {
             logConsole = "Algoritmo de Quine McCluskey";
             // Cria uma Coluna/lista de Mintermos ordenados por número de 1's
@@ -30,7 +30,7 @@ namespace QuineMcCluskey_GraficoC.Model
             // Transporta as Expressões não simplificadas para a Tabela de Cobertura e Imprime o resultado na Tela
             TransportaParaTabelaCobertura(ColunaMintermos, ExpressoesNaoSimplificadas);
             
-            txtLog.Text = logConsole;
+            return logConsole;
         }
 
         private static void ImprimeMintermosAgrupados(List<List<Mintermo>> ColunaMintermosAgrupados)

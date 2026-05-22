@@ -1,5 +1,6 @@
-﻿using QuineMcCluskey_GraficoC.Model;
-using QuineMcCluskey_GraficoC.ViewModel;
+using QuineMcCluskey_GraficoC.Application;
+using QuineMcCluskey_GraficoC.Domain;
+using QuineMcCluskey_GraficoC.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,11 +30,11 @@ namespace QuineMcCluskey_GraficoC.View
         private void btnExecutar_Click(object sender, EventArgs e)
         {
             // Carrega todos os Mintermos e Don't Cares do arquivo TXT
-            List<Mintermo> ColunaMintermos = ViewMain.CarregarMintermosSoap(txtSOP.Text);
+            List<Mintermo> ColunaMintermos = KarnaughMapApplicationService.CarregarMintermosSoap(txtSOP.Text);
 
             // Executa o Método responsável pelo Quine McCluskey
-            QuineMcCluskey Quine = new QuineMcCluskey(ViewMain.numeroVariaveis);
-            Quine.Executa(ColunaMintermos, txtLog);
+            QuineMcCluskey Quine = new QuineMcCluskey(KarnaughMapApplicationService.numeroVariaveis);
+            txtLog.Text = Quine.Executa(ColunaMintermos);
         }
     }
 }

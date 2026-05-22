@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using QuineMcCluskey_GraficoC.Domain;
 
-namespace QuineMcCluskey_GraficoC.ViewModel
+namespace QuineMcCluskey_GraficoC.Application
 {
-    class ViewMain
+    class KarnaughMapApplicationService
     {
         public static int numeroVariaveis = 0;
 
